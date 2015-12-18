@@ -6,6 +6,8 @@ import java.util.*
 
 public class Board() {
 
+    public var version = 0L
+
     val messages = TreeMap<Long, MutableSet<VersionedMessage>>()
     val missedVersions = Collections.synchronizedSet(HashSet<Long>())
 
@@ -13,6 +15,8 @@ public class Board() {
      * @return True if the message is a new one, false if it has already been saved earlier.
      */
     public fun saveMessage(message: VersionedMessage): Boolean {
+        version = message.version.coerceAtLeast(version)
+
         if (message.version in missedVersions)
             missedVersions.remove(message.version)
 
@@ -27,6 +31,6 @@ public class Board() {
     }
 
     public fun nextVersion(): Long {
-        return (messages.lastEntry()?.key ?: 0L) + 1
+        return version + 1
     }
 }

@@ -3,9 +3,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public interface Message
 
-public class GetMessage(val versions: List<Long>) : Message
+public data class GetMessage(val versions: List<Long>) : Message
 
 public class GetAllMessage : Message
+
+public data class MessageBatch(val messages: List<Message>) : Message
 
 public interface VersionedMessage : Message {
     val version: Long
