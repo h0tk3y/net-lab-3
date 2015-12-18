@@ -1,6 +1,5 @@
 package utils
 
-import segmentsIntersection.IntersectionProvider
 import java.util.*
 
 /**
@@ -149,9 +148,7 @@ public fun polygonLines(p: List<Point>): List<Segment>? {
 
     val pSet = HashSet(ps)
     val segments = ps.zip(ps.drop(1) + ps.first()).map { Segment(it.first, it.second) }
-    val list = IntersectionProvider.DEFAULT.intersection(segments).filterNot { it in pSet }
     return when {
-        list.isNotEmpty() -> null
         else -> segments
     }
 }
