@@ -240,9 +240,15 @@ public class Node() {
                 }
                 lastAreaVersion = lastAreaVersion.coerceAtLeast(msg.version)
             }
+            is MessageBatch -> {
+                for (m in msg.messages)
+                    handleMessage(m)
+            }
             is GetMessage -> {
                 println("--> ${msg.versions}")
-                msg.versions.map { board.messages[it] }.filterNotNull().flatMap { it }.forEach { sendMessage(it) }
+                val messages = msg.versions.map { board.messages[it] }.filterNotNull().flatMap { it }
+                if (messages.isNotEmpty())
+                    messages.forEach { sendMessage(it) }
             }
             is GetAllMessage -> {
                 board.messages.flatMap { it.value }.forEach { sendMessage(it) }
@@ -254,7 +260,7 @@ public class Node() {
 
     private fun sendMessagesLoop() {
         while (!needsStop) {
-            val msg = sendQueue.firstOrNull()
+            val msg = sendQueue.toList().firstOrNull()
             if (msg != null) {
             println("<-- $msg")
                 sendQueue.remove(msg)
@@ -271,6 +277,8 @@ public class Node() {
 
     private fun sendMessage(msg: Message) {
         sendQueue.add(msg)
+        if (msg is VersionedMessage)
+            board.version = board.version.coerceAtLeast(msg.version)
     }
 
     private fun checkMissedVersionsLoop() {
@@ -279,7 +287,7 @@ public class Node() {
                 println("<-- ${board.missedVersions}")
                 sendMessage(GetMessage(board.missedVersions.toList()))
             }
-            Thread.sleep(300)
+            Thread.sleep(1000)
         }
     }
 }
