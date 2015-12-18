@@ -1,0 +1,34 @@
+group 'ru,ifmo.ctddev.igushkin.cg'
+version '0.0.1-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'gradle-one-jar'
+apply plugin: 'application'
+
+mainClassName = "demos.MulticastDemo"
+applicationName = "netLab3"
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    ext.kotlin_version = '1.0.0-beta-3595'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+    }
+}
+
+task myjar(type: OneJar) {
+    mainClass = 'demos.NetworkDemo'
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
