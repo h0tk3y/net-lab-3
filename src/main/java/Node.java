@@ -152,9 +152,5 @@ public class Node {
                 }
             }
         }).start();
-
-        new Thread(() -> {
-
-        }).start();
     }
 }
