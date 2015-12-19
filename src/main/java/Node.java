@@ -46,18 +46,23 @@ public class Node {
     }
 
     private void joinOnAllIfaces() {
+        InetSocketAddress inetSocketAddr = new InetSocketAddress(
+                MULTICAST_HOST_NAME,
+                MULTICAST_PORT
+        );
+        Enumeration<NetworkInterface> ifaces = null;
         try {
-            InetSocketAddress inetSocketAddr = new InetSocketAddress(
-                    MULTICAST_HOST_NAME,
-                    MULTICAST_PORT
-            );
-            Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
-            while (ifaces.hasMoreElements()) {
+            ifaces = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        while (ifaces != null && ifaces.hasMoreElements()) {
+            try {
                 NetworkInterface iface = ifaces.nextElement();
                 receiveSocket.joinGroup(inetSocketAddr, iface);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

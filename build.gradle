@@ -22,7 +22,7 @@ apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
-mainClassName = "NodeKt"
+mainClassName = "NodeUIKt"
 applicationName = "netLab3"
 
 sourceCompatibility = 1.8
